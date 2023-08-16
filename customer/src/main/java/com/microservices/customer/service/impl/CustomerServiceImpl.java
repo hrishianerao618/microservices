@@ -22,7 +22,7 @@ public class CustomerServiceImpl implements CustomerService {
     CustomerRepository customerRepository;
 
     @Autowired
-    WebClient webClient;
+    WebClient.Builder webClientBuilder;
     @Override
     public List<CustomerDTO> getAllCustomers() {
         return customerRepository.findAll().stream().
@@ -36,7 +36,7 @@ public class CustomerServiceImpl implements CustomerService {
                map(this::convertToDTO);
         CustomerDTO customerDTO = optCustomerDTO.orElse(new CustomerDTO());
 
-        List<RentalDTO> rentalDTO = webClient.get().uri("http://localhost:8083/api/microservice/rental/getAllRentalByCustomer/"+customerId)
+        List<RentalDTO> rentalDTO = webClientBuilder.build().get().uri("http://rental/api/microservice/rental/getAllRentalByCustomer/"+customerId)
                 .retrieve()
                 .bodyToFlux(RentalDTO.class)
                 .map(tempRentalDTO -> {
