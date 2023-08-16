@@ -23,6 +23,13 @@ public class RentalServiceImpl implements RentalService {
         return rentalRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
+    @Override
+    public List<RentalDTO> findByCustomerId(Long customerId) {
+        return rentalRepository.findByCustomerId(customerId).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     private RentalDTO convertToDTO(Rental rental){
         RentalDTO rentalDTO = new RentalDTO();
 

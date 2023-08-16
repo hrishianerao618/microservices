@@ -3,9 +3,7 @@ package com.microservices.rental.controller;
 import com.microservices.rental.dto.RentalDTO;
 import com.microservices.rental.service.RentalService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,5 +16,10 @@ public class RentalController {
     @GetMapping(path = "/getAll")
     public List<RentalDTO> getAllRentals(){
         return rentalService.getAllRentals();
+    }
+
+    @GetMapping(path = "/getAllRentalByCustomer/{customerId}")
+    public List<RentalDTO> findByCustomerId(@PathVariable Long customerId){
+        return  rentalService.findByCustomerId(customerId);
     }
 }

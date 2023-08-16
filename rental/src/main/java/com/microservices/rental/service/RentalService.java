@@ -7,4 +7,6 @@ import java.util.List;
 public interface RentalService {
 
     public List<RentalDTO> getAllRentals();
+
+    public List<RentalDTO> findByCustomerId(Long customerId);
 }
