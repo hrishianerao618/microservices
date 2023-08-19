@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class ApiGatewayConfig {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder){
+
         return builder.routes()
                 .route("customer", r -> r
                         .path("/api/microservice/customer/**")
