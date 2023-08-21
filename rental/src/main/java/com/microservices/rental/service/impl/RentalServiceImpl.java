@@ -28,17 +28,10 @@ public class RentalServiceImpl implements RentalService {
 
     @Override
     public List<RentalDTO> findByCustomerId(Long customerId) {
-        log.info("Wait Starts");
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } finally {
-            log.info("Wait Ends");
-            return rentalRepository.findByCustomerId(customerId).stream()
-                    .map(this::convertToDTO)
-                    .collect(Collectors.toList());
-        }
+        return rentalRepository.findByCustomerId(customerId).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+
     }
 
     private RentalDTO convertToDTO(Rental rental) {
