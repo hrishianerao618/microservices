@@ -26,7 +26,7 @@ public class Rental {
     private LocalDateTime rentalDate;
 
     @ManyToOne
-    @JoinColumn(name = "inventory_id", referencedColumnName = "inventory_id", insertable = false, updatable = false)
+    @JoinColumn(name = "inventory_id", referencedColumnName = "inventory_id", insertable = true, updatable = false)
     private Inventory inventory;
 
     @Column(name = "customer_id", nullable = false)
@@ -36,7 +36,7 @@ public class Rental {
     private LocalDateTime returnDate;
 
     @ManyToOne
-    @JoinColumn(name = "staff_id", referencedColumnName = "staff_id", insertable = false, updatable = false)
+    @JoinColumn(name = "staff_id", referencedColumnName = "staff_id", insertable = true, updatable = false)
     private Staff staff;
 
     @Column(name = "last_update", nullable = false)
