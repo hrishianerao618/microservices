@@ -1,0 +1,5 @@
+# Ignore test files and directories
+**/test/
+**/*CustomerApplicationTests.java
+**/*CustomerApplicationTests.java
+

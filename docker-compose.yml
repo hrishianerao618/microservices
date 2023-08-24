@@ -20,7 +20,122 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+  postgres_customer:
+    container_name: postgres_customer
+    image: postgres
+    environment:
+      POSTGRES_DB: dvdrental_customer
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+    volumes:
+      - ./postgres:/data/postgres
+    expose:
+      - "5430"
+    ports:
+      - "5430:5430"
+    restart: always
+
+  postgres_rental:
+    container_name: postgres_rental
+    image: postgres
+    environment:
+      POSTGRES_DB: dvdrental_rental
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+    volumes:
+      - ./postgres:/data/postgres
+    expose:
+      - "5431"
+    ports:
+      - "5431:5431"
+    restart: always
+
+  postgres_movie:
+    container_name: postgres_movie
+    image: postgres
+    environment:
+      POSTGRES_DB: dvdrental_movie
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+    volumes:
+      - ./postgres:/data/postgres
+    expose:
+      - "5434"
+    ports:
+      - "5438:5434"
+    restart: always
+
+  discovery-server:
+    image: hrishidockertest/discoveryserver:latest
+    container_name: discovery-server
+    pull_policy: always
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  apigateway:
+    container_name: apigateway
+    image: hrishidockertest/apigateway:latest
+    pull_policy: always
+    ports:
+      - "8181:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - discovery-server
+
+  customer:
+    container_name: customer
+    image: hrishidockertest/customer:latest
+    pull_policy: always
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_customer:5430/dvdrental_customer
+    depends_on:
+      - discovery-server
+      - apigateway
+      - postgres_customer
+
+  rental:
+    container_name: rental
+    image: hrishidockertest/rental:latest
+    pull_policy: always
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_rental:5431/dvdrental_rental
+    depends_on:
+      - discovery-server
+      - apigateway
+      - postgres_rental
+      - zookeeper
+      - broker
+
+  movie:
+    container_name: movie
+    image: hrishidockertest/movie:latest
+    pull_policy: always
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_movie:5434/dvdrental_movie
+    depends_on:
+      - discovery-server
+      - apigateway
+      - postgres_movie
+      - zookeeper
+      - broker
+

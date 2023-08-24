@@ -5,10 +5,10 @@ FROM openjdk:17
 WORKDIR /app
 
 # Copy the built JAR or executable to the container
-COPY target/customer.jar app.jar
+COPY target/customer-0.0.1-SNAPSHOT.jar customer.jar
 
 # Expose the port that your microservice runs on
 EXPOSE 8081
 
 # Run the microservice
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "customer.jar"]
